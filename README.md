@@ -1,5 +1,3 @@
----
-
 # Brawdle
 
 Brawdle is a fun web application inspired by the popular word guessing game Wordle, but with a unique twist: it's based on the video game Brawlhalla! In Brawdle, players can enjoy two exciting game modes, both in regular and daily versions.
