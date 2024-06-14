@@ -40,7 +40,7 @@ Similar to the normal mode, but with a daily silhouette character that players m
 
 1. Clone the repository:
    ```sh
-   git clone [URL of your project]
+   git clone git@github.com:Evul88/brawldle.git
    ```
 2. Navigate to the project directory:
    ```sh
