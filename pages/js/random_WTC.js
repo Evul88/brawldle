@@ -1,0 +1,1 @@
+import '../sass/random_WTC.scss'
