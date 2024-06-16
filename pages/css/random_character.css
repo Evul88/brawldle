@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'ITC Eras Bold';
-    src: url(../fonts/ITCErasBold.otf);
+    src: url(../../fonts/ITCErasBold.otf);
 }
 
 html {
@@ -15,7 +15,7 @@ html {
 body {
     padding: 0;
     margin: 0;
-    background-image: url(../images/img/bg.png);
+    background-image: url(../../images/img/bg.png);
     background-repeat: no-repeat;
     background-size: cover;
     font-family: 'ITC Eras Bold';
