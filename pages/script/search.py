@@ -1,36 +1,42 @@
-#!/usr/bin/env python3
-
-import cgi
-import json
 import mysql.connector
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+
+app = Flask(__name__)
+CORS(app)  # Habilita CORS para toda la aplicación Flask
+
+# Configuración de la base de datos
+db_config = {
+    'host': 'roundhouse.proxy.rlwy.net',
+    'user': 'root',
+    'password': 'HVFGToBRQhMlEWishroAhfpHakPUpSWB',
+    'database': 'railway',
+    'port': 38091
+}
 
 def get_characters(name):
-    conn = mysql.connector.connect(
-        host="roundhouse.proxy.rlwy.net",
-        user="root",
-        password="HVFGToBRQhMlEWishroAhfpHakPUpSWB",
-        database="railway"
-    )
-    cursor = conn.cursor()
-    # Usar un LIKE para buscar caracteres que coincidan con la entrada
-    query = "SELECT * FROM brawlers WHERE name LIKE %s"
-    cursor.execute(query, ('%' + name + '%',))
-    results = cursor.fetchall()
-    conn.close()
-    return results
+    try:
+        conn = mysql.connector.connect(**db_config)
+        cursor = conn.cursor()
+        # Usar LIKE para buscar caracteres que comiencen con la entrada
+        query = "SELECT * FROM brawlers WHERE name LIKE %s"
+        cursor.execute(query, (name + '%',))  # Utiliza name + '%' para buscar nombres que comiencen con name
+        results = cursor.fetchall()
+        conn.close()
+        return results
+    except Exception as e:
+        print(f"Error en la base de datos: {e}")
+        return []
 
-# Obtener datos del formulario CGI
-form = cgi.FieldStorage()
-query = form.getvalue('query')
+@app.route('/search', methods=['GET'])
+def search_characters():
+    query = request.args.get('query')
+    if query:
+        results = get_characters(query)
+        return jsonify(results)
+    else:
+        return jsonify([])
 
-# Configurar los encabezados HTTP para indicar que se envía JSON
-print("Content-Type: application/json")
-print()
+if __name__ == '__main__':
+    app.run(debug=True)
 
-if query:
-    results = get_characters(query)
-    # Convertir resultados a formato JSON y enviarlos
-    print(json.dumps(results))
-else:
-    # Enviar un arreglo vacío si no hay consulta
-    print(json.dumps([]))

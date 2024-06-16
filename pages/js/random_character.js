@@ -8,7 +8,7 @@ searchInput.addEventListener('input', async function() {
     
     // Mostrar el div de resultados si hay algún valor en el campo de búsqueda
     if (inputValue) {
-        resultDiv.style.display = 'inline';
+        resultDiv.style.display = 'flex';
     } else {
         resultDiv.style.display = 'none';
         resultDiv.innerHTML = ''; // Limpiar resultados si el campo está vacío
@@ -16,7 +16,7 @@ searchInput.addEventListener('input', async function() {
     }
 
     try {
-        const response = await fetch(`./script/search.py?query=${encodeURIComponent(inputValue)}`);
+        const response = await fetch(`http://localhost:5000/search?query=${encodeURIComponent(inputValue)}`);
         if (!response.ok) {
             throw new Error('No se pudo obtener la respuesta del servidor.');
         }
@@ -30,16 +30,39 @@ searchInput.addEventListener('input', async function() {
             resultDiv.textContent = 'No hay ningún personaje.';
         } else {
             data.forEach(character => {
-                const characterName = character[1]; // Suponiendo que el nombre está en la segunda columna
-                const characterImage = `../../images/characters/${character[2]}`; // Suponiendo que la imagen está en la tercera columna
+                const characterId = character[0]; // Supongamos que el ID del personaje está en la primera posición
+                const characterName = character[1];
+                const characterNameLower = characterName.toLowerCase();
+                const characterImage = `../images/characters/${characterNameLower}.png`;
 
-                const characterElement = document.createElement('div');
-                characterElement.classList.add('character');
-                characterElement.innerHTML = `
-                    <img src="${characterImage}" alt="${characterName}" />
-                    <p>${characterName}</p>
-                `;
-                resultDiv.appendChild(characterElement);
+                // Crear el contenedor de resultados para cada personaje
+                const resultContainer = document.createElement('div');
+                resultContainer.classList.add('results_container');
+
+                // Crear la imagen del personaje
+                const characterImg = document.createElement('img');
+                characterImg.classList.add('results_img');
+                characterImg.src = characterImage;
+                characterImg.alt = characterName;
+
+                // Crear el nombre del personaje
+                const characterNameElement = document.createElement('p');
+                characterNameElement.classList.add('results_name');
+                characterNameElement.textContent = characterName;
+
+                // Añadir evento de clic al contenedor de resultados
+                resultContainer.addEventListener('click', async function(event) {
+                    event.stopPropagation(); // Detener la propagación del evento para evitar que active el formulario
+
+                    await seleccionarPersonaje(characterId);
+                });
+
+                // Añadir la imagen y el nombre al contenedor de resultados
+                resultContainer.appendChild(characterImg);
+                resultContainer.appendChild(characterNameElement);
+
+                // Añadir el contenedor de resultados al div principal de resultados
+                resultDiv.appendChild(resultContainer);
             });
         }
     } catch (error) {
@@ -48,8 +71,38 @@ searchInput.addEventListener('input', async function() {
     }
 });
 
+// Función para seleccionar un personaje
+async function seleccionarPersonaje(characterId) {
+    try {
+        // Mostrar el ID del personaje en la consola
+        console.log('ID del personaje seleccionado:', characterId);
+
+        const response = await fetch('http://localhost:5000/select-character', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ character_id: characterId })
+        });
+
+        if (!response.ok) {
+            throw new Error('No se pudo seleccionar el personaje.');
+        }
+
+        // Limpiar el campo de búsqueda y ocultar los resultados
+        searchInput.value = '';
+        resultDiv.style.display = 'none';
+        resultDiv.innerHTML = '';
+
+        // Mostrar mensaje de éxito
+        alert('Personaje seleccionado correctamente.');
+    } catch (error) {
+        console.error('Error al seleccionar personaje:', error);
+        alert('Error al seleccionar personaje. Inténtalo de nuevo más tarde.');
+    }
+}
+
 // Evitar el envío del formulario
 form.addEventListener('submit', function(event) {
     event.preventDefault();
 });
-
