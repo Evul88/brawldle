@@ -1,5 +1,3 @@
-import '../sass/random_character.scss';
-
 const form = document.querySelector('.input');
 const searchInput = document.querySelector('.input_text');
 const resultDiv = document.querySelector('.result');
