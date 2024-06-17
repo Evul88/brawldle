@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
+from mysql.connector import Error as MySQLError
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para toda la aplicación Flask
@@ -11,7 +12,8 @@ db_config = {
     'user': 'root',
     'password': 'HVFGToBRQhMlEWishroAhfpHakPUpSWB',
     'database': 'railway',
-    'port': 38091
+    'port': 38091,
+    'autocommit': True  # Para asegurar que las transacciones se autocommitan
 }
 
 # Función para obtener personajes por nombre
@@ -22,11 +24,14 @@ def get_characters_by_name(name):
         query = "SELECT * FROM brawlers WHERE name LIKE %s"
         cursor.execute(query, (name + '%',))
         results = cursor.fetchall()
-        conn.close()
         return results
-    except Exception as e:
-        print(f"Error en la base de datos: {e}")
+    except MySQLError as e:
+        print(f"Error MySQL al buscar por nombre: {e}")
         return []
+    finally:
+        if 'conn' in locals() and conn.is_connected():
+            cursor.close()
+            conn.close()
 
 # Función para obtener un personaje por su ID
 def get_character_by_id(character_id):
@@ -35,12 +40,15 @@ def get_character_by_id(character_id):
         cursor = conn.cursor(dictionary=True)
         query = "SELECT * FROM brawlers WHERE id = %s"
         cursor.execute(query, (character_id,))
-        results = cursor.fetchone()
-        conn.close()
-        return results
-    except Exception as e:
-        print(f"Error en la base de datos: {e}")
+        result = cursor.fetchone()
+        return result
+    except MySQLError as e:
+        print(f"Error MySQL al buscar por ID: {e}")
         return None
+    finally:
+        if 'conn' in locals() and conn.is_connected():
+            cursor.close()
+            conn.close()
 
 @app.route('/search', methods=['GET'])
 def search_characters():
@@ -53,12 +61,8 @@ def search_characters():
         
         if result:
             return jsonify(result)
-        else:
-            return jsonify([])
-    else:
-        return jsonify([])
-
-# No necesitamos la línea app.run() aquí
+    
+    return jsonify([])
 
 if __name__ == '__main__':
     # Para ejecutar con Uvicorn
