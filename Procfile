@@ -1,1 +1,1 @@
-web: uvicorn pages.script.search:app --host 0.0.0.0 --port $PORT
+web: uvicorn search:app --host 0.0.0.0 --port $PORT
