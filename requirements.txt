@@ -1,0 +1,2 @@
+uvicorn
+mysql-connector-python

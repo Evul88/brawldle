@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
+from uvicorn import run
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para toda la aplicación Flask
@@ -60,4 +61,6 @@ def search_characters():
         return jsonify([])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Ejecutar la aplicación con Uvicorn para aprovechar su capacidad asincrónica
+    run(app, host='localhost', port=5000, log_level="info")
+
