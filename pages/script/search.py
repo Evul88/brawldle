@@ -1,7 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import mysql.connector
-from uvicorn import run
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para toda la aplicación Flask
@@ -19,9 +18,9 @@ db_config = {
 def get_characters_by_name(name):
     try:
         conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)  # Utiliza dictionary=True para obtener los resultados como diccionarios
+        cursor = conn.cursor(dictionary=True)
         query = "SELECT * FROM brawlers WHERE name LIKE %s"
-        cursor.execute(query, (name + '%',))  # Agregar % para buscar nombres que comiencen con 'name'
+        cursor.execute(query, (name + '%',))
         results = cursor.fetchall()
         conn.close()
         return results
@@ -33,7 +32,7 @@ def get_characters_by_name(name):
 def get_character_by_id(character_id):
     try:
         conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)  # Utiliza dictionary=True para obtener los resultados como diccionarios
+        cursor = conn.cursor(dictionary=True)
         query = "SELECT * FROM brawlers WHERE id = %s"
         cursor.execute(query, (character_id,))
         results = cursor.fetchone()
@@ -47,20 +46,21 @@ def get_character_by_id(character_id):
 def search_characters():
     query = request.args.get('query')
     if query:
-        if query.isdigit():  # Si query es un número, buscar por ID
+        if query.isdigit():
             result = get_character_by_id(int(query))
-        else:  # Si query es una cadena, buscar por nombre
+        else:
             result = get_characters_by_name(query)
         
         if result:
             return jsonify(result)
         else:
             return jsonify([])
-
     else:
         return jsonify([])
 
-if __name__ == '__main__':
-    # Ejecutar la aplicación con Uvicorn para aprovechar su capacidad asincrónica
-    app.run(debug=True)
+# No necesitamos la línea app.run() aquí
 
+if __name__ == '__main__':
+    # Para ejecutar con Uvicorn
+    import uvicorn
+    uvicorn.run(app, host='0.0.0.0', port=5000)
