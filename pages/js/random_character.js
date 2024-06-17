@@ -246,6 +246,8 @@ async function seleccionarPersonaje(characterName) {
 
         // Mostrar los datos del personaje en la tabla
         mostrarDatosEnTabla(characterData);
+        resultDiv.style.left = '12em';
+        resultDiv.style.top = '13.1em';
 
     } catch (error) {
         console.error('Error al seleccionar personaje:', error);

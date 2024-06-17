@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'ITC Eras Bold';
-    src: url(./fonts/ITCErasBold.otf);
+    src: url(../../fonts/ITCErasBold.otf);
 }
 
 html {
@@ -13,7 +13,7 @@ html {
 body {
     padding: 0;
     margin: 0;
-    background-image: url(./images/img/bg.png);
+    background-image: url(../../images/img/bg.png);
     background-repeat: no-repeat;
     background-size: cover;
     font-family: 'ITC Eras Bold';
@@ -71,13 +71,12 @@ a {
 }
 
 .link_button {
-    display: flex;
-    justify-content: center;
-    max-width: 30%;
-}
-
-.link_image {
-    width: 100%;
+    max-width: 50%;
+    background-color: #8912b7;
+    border: .5em solid #4f0a6a;
+    border-radius: 2em;
+    padding: .5em;
+    text-align: center;
 }
 
 .footer {
@@ -121,25 +120,9 @@ a {
     fill: rgb(213, 170, 255);
 }
 
-/* Mobile Styles */
 @media (max-width: 768px) {
-    .header {
-        max-height: 5em;
-    }
-    
-    .main {
-        height: 30em;
-    }
-
-    .title {
-        font-size: .5em;
-    }
-
     .footer {
         font-size: .2em;
-    }
-
-    .link_button {
-        max-width: 70%;
+        padding: 0 1em;
     }
 }
