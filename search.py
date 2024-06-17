@@ -1,11 +1,9 @@
 from flask import Flask, request, jsonify, send_file
-from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error as MySQLError
 import os
 
 app = Flask(__name__)
-CORS(app)  # Habilita CORS para toda la aplicación Flask
 
 # Configuración de la base de datos
 db_config = {
@@ -35,8 +33,8 @@ def randomCharacter():
         return send_file(random_character_path)
     except Exception as e:
         print(f"Error al enviar el archivo random_character.html: {e}")
-        return str(e), 500
-    
+        return str(e), 500  # Retornar un mensaje de error y código 500 en caso de fallo
+
 # Función para obtener personajes por nombre
 def get_characters_by_name(name):
     try:
@@ -86,4 +84,5 @@ def search_characters():
     return jsonify([])
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    import uvicorn
+    uvicorn.run(app)
