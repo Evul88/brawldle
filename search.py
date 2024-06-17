@@ -18,7 +18,11 @@ db_config = {
 
 @app.route('/')
 def gotoIndex():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        print(f"Error al renderizar la plantilla index.html: {e}")
+        return str(e), 500  # Retornar un mensaje de error y código 500 en caso de fallo
 
 # Función para obtener personajes por nombre
 def get_characters_by_name(name):
@@ -69,5 +73,4 @@ def search_characters():
     return jsonify([])
 
 if __name__ == '__main__':
-    # Para ejecutar con Uvicorn
     app.run(debug=True)
