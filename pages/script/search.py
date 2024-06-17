@@ -62,5 +62,5 @@ def search_characters():
 
 if __name__ == '__main__':
     # Ejecutar la aplicación con Uvicorn para aprovechar su capacidad asincrónica
-    run(app, host='localhost', port=5000, log_level="info")
+    app.run(debug=True)
 
