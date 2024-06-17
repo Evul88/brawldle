@@ -1,8 +1,7 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error as MySQLError
-import os
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para toda la aplicación Flask
@@ -17,11 +16,9 @@ db_config = {
     'autocommit': True  # Para asegurar que las transacciones se autocommitan
 }
 
-# Ruta para servir el archivo index.html
 @app.route('/')
-def index():
-    # Ajusta la ruta relativa según la estructura de tu proyecto
-    return send_from_directory(os.path.abspath('../../'), 'index.html')
+def gotoIndex():
+    return render_template('../../index.html')
 
 # Función para obtener personajes por nombre
 def get_characters_by_name(name):
@@ -57,7 +54,6 @@ def get_character_by_id(character_id):
             cursor.close()
             conn.close()
 
-# Ruta para búsqueda de personajes
 @app.route('/search', methods=['GET'])
 def search_characters():
     query = request.args.get('query')
