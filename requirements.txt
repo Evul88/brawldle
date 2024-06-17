@@ -1,5 +1,4 @@
-fastapi
+flask-cors
+flask
 uvicorn
 mysql-connector-python
-pydantic
-typing
