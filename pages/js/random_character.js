@@ -1,5 +1,3 @@
-import './css/random_character.css'
-
 document.addEventListener('DOMContentLoaded', async function() {
     const searchInput = document.querySelector('.input_text');
     const resultDiv = document.querySelector('.result');
@@ -11,7 +9,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Función para buscar un personaje por ID y devolver un objeto JSON
     async function buscarPersonajePorId(id) {
         try {
-            const response = await fetch(`https://brawldle-jsn.up.railway.app/search?query=${encodeURIComponent(id)}`);
+            const response = await fetch(`http://localhost:5000/search?query=${encodeURIComponent(id)}`);
             if (!response.ok) {
                 throw new Error('No se pudo obtener la respuesta del servidor.');
             }
@@ -181,7 +179,7 @@ document.addEventListener('DOMContentLoaded', async function() {
             homeButton.textContent = 'Go Back Home';
             homeButton.classList.add('boton');
             homeButton.addEventListener('click', function() {
-                window.location.href = 'https://brawldle-jsn.up.railway.app'; // Redirigir al inicio
+                window.location.href = '../index.html'; // Redirigir al inicio
             });
 
             // Crear el botón para recargar la página (Volver a jugar)
@@ -202,7 +200,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     // Función para realizar una búsqueda de personajes
 async function buscarPersonajes(query) {
     try {
-        const response = await fetch(`https://brawldle-jsn.up.railway.app/search?query=${encodeURIComponent(query.toLowerCase())}`);
+        const response = await fetch(`http://localhost:5000/search?query=${encodeURIComponent(query.toLowerCase())}`);
         if (!response.ok) {
             throw new Error('No se pudo obtener la respuesta del servidor.');
         }
@@ -225,7 +223,7 @@ async function buscarPersonajes(query) {
 async function seleccionarPersonaje(characterName) {
     try {
         // Realizar la búsqueda del personaje por nombre completo
-        const response = await fetch(`https://brawldle-jsn.up.railway.app/search?query=${encodeURIComponent(characterName)}`);
+        const response = await fetch(`http://localhost:5000/search?query=${encodeURIComponent(characterName)}`);
         if (!response.ok) {
             throw new Error('No se pudo obtener la respuesta del servidor.');
         }
