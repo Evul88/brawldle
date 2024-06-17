@@ -18,7 +18,7 @@ db_config = {
 
 @app.route('/')
 def gotoIndex():
-    return render_template('../../index.html')
+    return render_template('index.html')
 
 # Función para obtener personajes por nombre
 def get_characters_by_name(name):
