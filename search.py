@@ -1,7 +1,8 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import mysql.connector
 from mysql.connector import Error as MySQLError
+import os
 
 app = Flask(__name__)
 CORS(app)  # Habilita CORS para toda la aplicación Flask
@@ -16,14 +17,26 @@ db_config = {
     'autocommit': True  # Para asegurar que las transacciones se autocommitan
 }
 
+# Ruta para la página principal (index.html)
 @app.route('/')
 def gotoIndex():
     try:
-        return render_template('index.html')
+        index_path = os.path.join(app.root_path, 'index.html')
+        return send_file(index_path)
     except Exception as e:
-        print(f"Error al renderizar la plantilla index.html: {e}")
+        print(f"Error al enviar el archivo index.html: {e}")
         return str(e), 500  # Retornar un mensaje de error y código 500 en caso de fallo
 
+# Ruta para la página random_character.html
+@app.route('/game')
+def randomCharacter():
+    try:
+        random_character_path = os.path.join(app.root_path, 'pages', 'random_character.html')
+        return send_file(random_character_path)
+    except Exception as e:
+        print(f"Error al enviar el archivo random_character.html: {e}")
+        return str(e), 500
+    
 # Función para obtener personajes por nombre
 def get_characters_by_name(name):
     try:
