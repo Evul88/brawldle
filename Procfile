@@ -1,1 +1,1 @@
-web: uvicorn search:app --host 0.0.0.0 --port $PORT
+web: uvicorn app:search --host 0.0.0.0 --port $PORT
